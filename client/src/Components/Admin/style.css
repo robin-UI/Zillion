@@ -1,0 +1,22 @@
+
+
+.shareImgContainer{
+    padding: 0 20px 10px 20px;
+    position: relative;
+}
+
+.shareImg{
+    width: 100%;
+    object-fit: cover;
+}
+
+.shareCancleImg{
+    position: absolute;
+    color: firebrick;
+    top: 5px;
+    font-size: 33px;
+    font-weight: 600;
+    right: 25px;
+    cursor: pointer;
+    opacity: 0.7;
+}
