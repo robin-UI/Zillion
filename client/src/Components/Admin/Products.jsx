@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 
 const Products = ({prod}) => {
 
-    const [user, setUser] = useState('')
+    const [user, setUser] = useState('');
+    const [isApprove, setIsApprove] = useState(false);
 
     let data = {
         approve: true,
@@ -15,20 +16,21 @@ const Products = ({prod}) => {
         const getUser = async () => {
             let res = await axios.get('http://localhost:5000/userAdmin/getuserDetails/'+ prod.adminId)
             setUser(res.data.data.adminname);
+            setIsApprove(prod.approve)
         }
         getUser()
       } catch (error) {
         
       }
-    }, [prod.adminId])
+    }, [prod.adminId, prod.approve])
     
 
     const approveFun = async () => {
         try {
+            
             let res = await axios.put('http://localhost:5000/admin/approveproduct/'+ prod._id, data)
-            console.log(res);
             if (res) {
-                window.location.reload()
+                setIsApprove(true) 
             }
         } catch (error) {
             console.log(error);
@@ -37,14 +39,16 @@ const Products = ({prod}) => {
 
     const rejectFun = async () => {
         try {
+            
             let res = await axios.put('http://localhost:5000/admin/rejectproduct/'+ prod._id, data)
-            if (res) {
-                window.location.reload()
+            if (res){
+                setIsApprove(false)
             }
         } catch (error) {
             console.log(error);
         }
     }
+
 
     return (
         <div className='my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3' >
@@ -62,7 +66,7 @@ const Products = ({prod}) => {
                     <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Edit</button>
                 </div>
                 <div className="flex mt-4 space-x-3 md:mt-6">
-                  { ! prod.approve
+                  { ! isApprove
                     ? <button onClick={approveFun} className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Approve </button>
                     : <button onClick={rejectFun} className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">Reject</button>
                   }
